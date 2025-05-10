@@ -74,10 +74,9 @@ const LandingPage = () => {
                                             creatorId={fund.manager}
                                             imageURL={"/images/default-campaign-image.jpg"}
                                             id={fund.id}
-                                            // id={fund.id.toString()}
                                             target={fund.goal.toString()}
                                             balance={fund.balance.toString()}
-                                            ethPrice="NA"
+                                            contributorCount={fund.contributorCount?.toString() || "0"}
                                         />
                                     </div>
                                 );

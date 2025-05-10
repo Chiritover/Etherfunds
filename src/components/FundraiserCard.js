@@ -12,8 +12,8 @@ import {
     Progress,
 } from "@chakra-ui/react";
 import { Link } from 'react-router-dom';
-const FundraiserCard = ({ name, description, creatorId, imageURL, id, balance, target, ethPrice }) => {
-
+const FundraiserCard = ({ name, description, creatorId, imageURL, id, balance, target, contributorCount }) => {
+    const percent = target > 0 ? ((parseFloat(balance) / parseFloat(target)) * 100).toFixed(2) : 0;
     return (
         // pls add a Navlink component
         <Link to={`/Fundraiser/${id}`}>
@@ -134,6 +134,12 @@ const FundraiserCard = ({ name, description, creatorId, imageURL, id, balance, t
                                 max={target}
                                 mt="2"
                             />
+                            <Text fontSize="sm" color="gray.500" mt={2}>
+                                <b>{percent}%</b> of goal reached
+                            </Text>
+                            <Text fontSize="sm" color="gray.500">
+                                <b>{contributorCount}</b> unique donors
+                            </Text>
                         </Box>{" "}
                     </Flex>
                 </Box>
