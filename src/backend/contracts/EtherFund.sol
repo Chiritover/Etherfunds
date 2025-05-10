@@ -12,6 +12,7 @@ struct Campaign {
     uint256 balance;
     uint256 timestamp;
     uint256 contributorCount;
+    uint256 donorsCount;
 }
 
 struct Contribution {
@@ -65,6 +66,26 @@ contract EtherFund {
         string description,
         uint256 goal,
         uint256 balance,
+        uint256 timestamp
+    );
+
+    event CampaignUpdate(
+        uint256 indexed campaignId,
+        string ipfsHash,
+        uint256 timestamp
+    );
+
+    event DonationReceived(
+        uint256 indexed campaignId,
+        address indexed donor,
+        uint256 amount,
+        uint256 timestamp
+    );
+
+    event FundsDisbursed(
+        uint256 indexed campaignId,
+        address indexed recipient,
+        uint256 amount,
         uint256 timestamp
     );
 
@@ -145,6 +166,7 @@ contract EtherFund {
             contribution.timestamp = block.timestamp;
 
             campaign.contributorCount++;
+            campaign.donorsCount++;
         } else {
             // add to existing contribution
             for (uint256 i = 0; i < contributionIds.length; i++) {
@@ -159,8 +181,8 @@ contract EtherFund {
                 }
             }
         }
-        // if not already contributed
         campaign.balance += _amount;
+        emit DonationReceived(_campaignId, msg.sender, _amount, block.timestamp);
     }
 
     function getSendersContribution(uint256 _campaignId)
@@ -220,6 +242,12 @@ contract EtherFund {
         return resp;
     }
 
+    function addCampaignUpdate(uint256 _campaignId, string memory _ipfsHash) public {
+        Campaign storage campaign = campaigns[_campaignId];
+        require(campaign.manager == msg.sender, "Only campaign manager can add updates");
+        emit CampaignUpdate(_campaignId, _ipfsHash, block.timestamp);
+    }
+
     // SECTION: Withdraw
     event WithdrawRequestedCreated(
         uint256 id,
@@ -249,6 +277,7 @@ contract EtherFund {
         );
         campaign.balance -= amount;
         _beneficiary.transfer(amount);
+        emit FundsDisbursed(_campaignId, _beneficiary, amount, block.timestamp);
         campaigns[_campaignId] = campaign;
     }
 

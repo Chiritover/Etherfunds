@@ -25,8 +25,15 @@ import {
 	CloseButton,
 	FormHelperText,
 	Link,
+	Tabs,
+	TabList,
+	TabPanels,
+	Tab,
+	TabPanel,
 } from "@chakra-ui/react";
 import FundDetailsCard from '../components/FundDetailsCard'
+import CampaignUpdates from '../components/CampaignUpdates'
+import CampaignDashboard from '../components/CampaignDashboard'
 import { InfoIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import { useParams } from 'react-router-dom';
 import { useForm } from "react-hook-form";
@@ -338,6 +345,24 @@ const FundDetails = () => {
 							: null
 						}
 					</Stack>
+				</Container>
+
+				<Container maxW={"7xl"} py={10}>
+					<Tabs variant="enclosed">
+						<TabList>
+							<Tab>Dashboard</Tab>
+							<Tab>Updates</Tab>
+						</TabList>
+
+						<TabPanels>
+							<TabPanel>
+								<CampaignDashboard campaignId={id} />
+							</TabPanel>
+							<TabPanel>
+								<CampaignUpdates campaignId={id} />
+							</TabPanel>
+						</TabPanels>
+					</Tabs>
 				</Container>
 			</Box>
 		</main>
